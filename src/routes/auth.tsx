@@ -133,7 +133,9 @@ function GoogleButton() {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: "google",
           options: {
-            redirectTo: `${window.location.origin}/dashboard`,
+            // Public same-origin callback — never a protected route, so the
+            // session has time to hydrate before we enter the app.
+            redirectTo: `${window.location.origin}/auth/callback`,
             queryParams: { prompt: "select_account" },
           },
         });
