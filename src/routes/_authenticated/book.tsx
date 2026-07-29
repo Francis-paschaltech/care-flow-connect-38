@@ -338,8 +338,22 @@ function BookPage() {
               </div>
               <div>
                 <p className="mb-2 text-sm font-semibold">Available time slots</p>
+                {!selectedDoctor ? (
+                  <p className="text-sm text-muted-foreground">
+                    Choose a doctor first to see their available times.
+                  </p>
+                ) : !dayIsWorked ? (
+                  <p className="text-sm text-muted-foreground">
+                    {selectedDoctor.full_name} does not consult on that day. Working days:{" "}
+                    {workingDays.length ? workingDays.join(", ") : "none configured"}.
+                  </p>
+                ) : slots.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    No working hours are configured for this doctor yet.
+                  </p>
+                ) : (
                 <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-7">
-                  {SLOTS.map((value) => {
+                  {slots.map((value) => {
                     const taken = takenSlots.has(value);
                     return (
                       <button
@@ -361,6 +375,7 @@ function BookPage() {
                     );
                   })}
                 </div>
+                )}
               </div>
               <div className="rounded-md border border-border bg-muted/40 p-3 text-sm">
                 <p className="font-semibold">Summary</p>
