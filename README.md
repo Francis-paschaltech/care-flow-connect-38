@@ -576,3 +576,11 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Security & production notes
+
+CareConnect enforces roles server-side: public sign-up always creates a
+`patient`, and doctor/nurse/receptionist/admin accounts are provisioned only by
+a signed-in admin from `/admin`. See [DEPLOYMENT.md](./DEPLOYMENT.md) for the
+first-admin bootstrap, Google OAuth setup, environment variables and the full
+security model.
