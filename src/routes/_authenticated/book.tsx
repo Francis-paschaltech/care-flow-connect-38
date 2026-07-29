@@ -21,6 +21,7 @@ import { useAppointments, useDepartments, useDoctors } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { useServerFn } from "@tanstack/react-start";
 import { createNotifications } from "@/lib/notifications.functions";
+import { slotsForHours, weekDayOf, type WeekDay } from "@/lib/clinic";
 
 export const Route = createFileRoute("/_authenticated/book")({
   head: () => ({
@@ -35,11 +36,6 @@ export const Route = createFileRoute("/_authenticated/book")({
   }),
   component: BookPage,
 });
-
-const SLOTS = [
-  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-  "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30",
-];
 
 const STEPS = ["Your details", "Doctor & reason", "Date & time"];
 
@@ -65,8 +61,31 @@ function BookPage() {
   const [submitting, setSubmitting] = useState(false);
 
   const filteredDoctors = useMemo(
-    () => (doctors.data ?? []).filter((doctor) => !departmentId || doctor.department_id === departmentId),
+    () =>
+      (doctors.data ?? []).filter(
+        (doctor) => doctor.is_active && (!departmentId || doctor.department_id === departmentId),
+      ),
     [doctors.data, departmentId],
+  );
+
+  const selectedDoctor = useMemo(
+    () => (doctors.data ?? []).find((doctor) => doctor.id === doctorId) ?? null,
+    [doctors.data, doctorId],
+  );
+
+  // Slots come from the doctor's own configured working hours and days, so a
+  // patient can never book outside the times the doctor set for themselves.
+  const workingDays = useMemo(
+    () => ((selectedDoctor?.available_days ?? []) as string[]) as WeekDay[],
+    [selectedDoctor],
+  );
+  const dayIsWorked = useMemo(() => {
+    if (!date || workingDays.length === 0) return false;
+    return workingDays.includes(weekDayOf(new Date(`${date}T00:00`)));
+  }, [date, workingDays]);
+  const slots = useMemo(
+    () => (selectedDoctor ? slotsForHours(selectedDoctor.start_hour, selectedDoctor.end_hour) : []),
+    [selectedDoctor],
   );
 
   const dayStart = new Date(`${date}T00:00`);
@@ -93,12 +112,16 @@ function BookPage() {
   const stepValid = (index: number) => {
     if (index === 0) return staff ? fullName.trim().length > 1 && /.+@.+\..+/.test(email) : true;
     if (index === 1) return !!doctorId && reason.trim().length > 2;
-    return !!date && !!slot;
+    return !!date && !!slot && dayIsWorked;
   };
 
   const submit = async () => {
     if (!stepValid(2)) {
-      toast.error("Pick a date and an available time slot.");
+      toast.error(
+        dayIsWorked
+          ? "Pick a date and an available time slot."
+          : "The selected doctor does not work on that day. Please choose another date.",
+      );
       return;
     }
     setSubmitting(true);
@@ -269,7 +292,13 @@ function BookPage() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="doctor">Doctor</Label>
-                <Select value={doctorId} onValueChange={setDoctorId}>
+                <Select
+                  value={doctorId}
+                  onValueChange={(value) => {
+                    setDoctorId(value);
+                    setSlot("");
+                  }}
+                >
                   <SelectTrigger id="doctor">
                     <SelectValue placeholder="Select a doctor" />
                   </SelectTrigger>
@@ -315,8 +344,22 @@ function BookPage() {
               </div>
               <div>
                 <p className="mb-2 text-sm font-semibold">Available time slots</p>
+                {!selectedDoctor ? (
+                  <p className="text-sm text-muted-foreground">
+                    Choose a doctor first to see their available times.
+                  </p>
+                ) : !dayIsWorked ? (
+                  <p className="text-sm text-muted-foreground">
+                    {selectedDoctor.full_name} does not consult on that day. Working days:{" "}
+                    {workingDays.length ? workingDays.join(", ") : "none configured"}.
+                  </p>
+                ) : slots.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    No working hours are configured for this doctor yet.
+                  </p>
+                ) : (
                 <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-7">
-                  {SLOTS.map((value) => {
+                  {slots.map((value) => {
                     const taken = takenSlots.has(value);
                     return (
                       <button
@@ -338,6 +381,7 @@ function BookPage() {
                     );
                   })}
                 </div>
+                )}
               </div>
               <div className="rounded-md border border-border bg-muted/40 p-3 text-sm">
                 <p className="font-semibold">Summary</p>

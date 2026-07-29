@@ -97,3 +97,27 @@ export function ageFrom(dob: string | null | undefined) {
   const diff = Date.now() - birth.getTime();
   return Math.floor(diff / (365.25 * 24 * 3600 * 1000));
 }
+
+/** Day keys stored in `doctors.available_days`, Monday first. */
+export const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
+
+export type WeekDay = (typeof WEEK_DAYS)[number];
+
+/** The `Mon`…`Sun` key for a date, matching `doctors.available_days`. */
+export function weekDayOf(date: Date): WeekDay {
+  return WEEK_DAYS[(date.getDay() + 6) % 7];
+}
+
+/**
+ * Build the bookable 30-minute slots for a doctor's configured working hours.
+ * The clinic closes for lunch between 12:00 and 13:00, so that hour is skipped.
+ */
+export function slotsForHours(startHour: number, endHour: number) {
+  const slots: string[] = [];
+  for (let hour = startHour; hour < endHour; hour += 1) {
+    if (hour === 12) continue;
+    slots.push(`${`${hour}`.padStart(2, "0")}:00`);
+    slots.push(`${`${hour}`.padStart(2, "0")}:30`);
+  }
+  return slots;
+}

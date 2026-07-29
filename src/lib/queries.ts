@@ -73,7 +73,9 @@ export function useDoctors() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("doctors")
-        .select("id, full_name, specialty, department_id, email, phone, is_active, years_experience, start_hour, end_hour")
+        .select(
+          "id, full_name, specialty, department_id, email, phone, is_active, years_experience, start_hour, end_hour, available_days",
+        )
         .order("full_name");
       if (error) throw error;
       return data ?? [];
