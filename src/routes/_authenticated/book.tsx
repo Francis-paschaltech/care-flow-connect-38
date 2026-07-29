@@ -140,20 +140,22 @@ function BookPage() {
       });
       if (error) throw error;
 
-      // notifications RLS requires user_id = auth.uid() (or staff). Always
-      // address the notification to the acting user so the insert succeeds.
+      // Notifications are created server-side (RLS still applies as the
+      // acting user) so failures surface instead of being silently dropped.
       if (me?.userId) {
-        const { error: notifyError } = await supabase.from("notifications").insert({
-          user_id: me.userId,
-          title: "New appointment booked",
-          message: `${nameValue} booked ${date} at ${slot}.`,
-          kind: "info",
-        });
-        if (notifyError) {
+        try {
+          await notify({
+            data: {
+              recipients: [me.userId],
+              title: "New appointment booked",
+              message: `${nameValue} booked ${date} at ${slot}.`,
+              kind: "info",
+            },
+          });
+          queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        } catch (notifyError) {
           console.error("Failed to create booking notification", notifyError);
           toast.warning("Appointment booked, but we could not create your reminder notification.");
-        } else {
-          queryClient.invalidateQueries({ queryKey: ["notifications"] });
         }
       }
 
