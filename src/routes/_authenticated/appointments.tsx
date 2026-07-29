@@ -28,6 +28,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser, isStaffRole } from "@/hooks/use-auth";
 import { useAppointments, useDoctors, addDays, startOfDay } from "@/lib/queries";
 import type { AppointmentRow } from "@/lib/queries";
+import { useServerFn } from "@tanstack/react-start";
+import { createNotifications } from "@/lib/notifications.functions";
 import { formatDate, formatTime, toDateKey } from "@/lib/clinic";
 
 export const Route = createFileRoute("/_authenticated/appointments")({
