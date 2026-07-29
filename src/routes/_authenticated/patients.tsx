@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireRoles, STAFF_ROLES } from "@/lib/route-guards";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -20,6 +21,7 @@ import { usePatients, useMedicalRecords } from "@/lib/queries";
 import { ageFrom, formatDate, initialsOf } from "@/lib/clinic";
 
 export const Route = createFileRoute("/_authenticated/patients")({
+  beforeLoad: () => requireRoles(STAFF_ROLES),
   head: () => ({
     meta: [
       { title: "Patients — CareConnect" },

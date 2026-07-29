@@ -140,11 +140,22 @@ function BookPage() {
       });
       if (error) throw error;
 
-      await supabase.from("notifications").insert({
-        title: "New appointment booked",
-        message: `${nameValue} booked ${date} at ${slot}.`,
-        kind: "info",
-      });
+      // notifications RLS requires user_id = auth.uid() (or staff). Always
+      // address the notification to the acting user so the insert succeeds.
+      if (me?.userId) {
+        const { error: notifyError } = await supabase.from("notifications").insert({
+          user_id: me.userId,
+          title: "New appointment booked",
+          message: `${nameValue} booked ${date} at ${slot}.`,
+          kind: "info",
+        });
+        if (notifyError) {
+          console.error("Failed to create booking notification", notifyError);
+          toast.warning("Appointment booked, but we could not create your reminder notification.");
+        } else {
+          queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        }
+      }
 
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
       toast.success("Appointment confirmed", {
