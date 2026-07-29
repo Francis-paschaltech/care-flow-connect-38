@@ -292,7 +292,13 @@ function BookPage() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="doctor">Doctor</Label>
-                <Select value={doctorId} onValueChange={setDoctorId}>
+                <Select
+                  value={doctorId}
+                  onValueChange={(value) => {
+                    setDoctorId(value);
+                    setSlot("");
+                  }}
+                >
                   <SelectTrigger id="doctor">
                     <SelectValue placeholder="Select a doctor" />
                   </SelectTrigger>
