@@ -288,6 +288,7 @@ function MonthCalendar({
 function ManageDialog({ appointment, onClose }: { appointment: AppointmentRow | null; onClose: () => void }) {
   const queryClient = useQueryClient();
   const { data: me } = useCurrentUser();
+  const notify = useServerFn(createNotifications);
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
   const [busy, setBusy] = useState(false);
