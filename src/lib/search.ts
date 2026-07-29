@@ -193,8 +193,8 @@ export function useGlobalSearch(term: string) {
                 results.push({
                   id: `staff-${profile.id}`,
                   group: "Staff",
-                  label: profile.full_name || profile.email,
-                  sublabel: `${roleLabels[roleById.get(profile.id) ?? "patient"]} · ${profile.email}`,
+                  label: profile.full_name || profile.email || "Staff member",
+                  sublabel: `${roleLabels[roleById.get(profile.id) ?? "patient"]} · ${profile.email ?? ""}`,
                   to: "/admin",
                 }),
               );
