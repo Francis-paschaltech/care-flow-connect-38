@@ -45,6 +45,7 @@ function BookPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: me } = useCurrentUser();
+  const notify = useServerFn(createNotifications);
   const staff = isStaffRole(me?.role);
   const departments = useDepartments();
   const doctors = useDoctors();
