@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Book appointments, manage patient records, and streamline clinic operations with CareConnect.",
+          "Book clinic appointments online, manage patient records and streamline clinic operations with CareConnect.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
