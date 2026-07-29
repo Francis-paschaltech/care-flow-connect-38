@@ -17,6 +17,9 @@ import { useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser } from "@/hooks/use-auth";
 import { initialsOf, roleLabels, type AppRole } from "@/lib/clinic";
+import { GlobalSearchDialog } from "@/components/app/global-search";
+import { SEARCH_SCOPE } from "@/lib/search";
+import { useQueryClient } from "@tanstack/react-query";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -80,8 +83,11 @@ export function AppShell({
 }) {
   const { data, loading } = useCurrentUser();
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const routerState = useRouterState();
+  const queryClient = useQueryClient();
   const role = data?.role ?? "patient";
+  const searchHint = SEARCH_SCOPE[role].slice(0, 2).join(", ").toLowerCase();
 
   return (
     <div className="min-h-screen bg-background">
@@ -125,15 +131,31 @@ export function AppShell({
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-2">
-              <div className="hidden items-center gap-2 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground md:flex">
+              <button
+                type="button"
+                onClick={() => setSearchOpen(true)}
+                aria-label="Search CareConnect"
+                className="hidden items-center gap-2 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground md:flex"
+              >
                 <Search className="size-3.5" aria-hidden />
-                <span>Search patients, appointments…</span>
-              </div>
+                <span>Search {searchHint}…</span>
+              </button>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Search CareConnect"
+                className="md:hidden"
+                onClick={() => setSearchOpen(true)}
+              >
+                <Search className="size-4" />
+              </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 aria-label="Sign out"
                 onClick={async () => {
+                  await queryClient.cancelQueries();
+                  queryClient.clear();
                   await supabase.auth.signOut();
                   window.location.href = "/";
                 }}
@@ -162,6 +184,8 @@ export function AppShell({
           )}
         </main>
       </div>
+
+      <GlobalSearchDialog open={searchOpen} onOpenChange={setSearchOpen} role={role} />
     </div>
   );
 }
