@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { Panel, CountBadge, EmptyState } from "@/components/app/app-shell";
 import { StatusPill } from "@/components/dashboards/patient-dashboard";
+import { DoctorSchedulePanel } from "@/components/app/doctor-schedule-panel";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAppointments, useNotifications, startOfDay, addDays } from "@/lib/queries";
-import { formatTime } from "@/lib/clinic";
+import { formatDate, formatTime } from "@/lib/clinic";
 
 export function DoctorDashboard({ doctorId }: { doctorId: string | null }) {
   const today = startOfDay();
@@ -15,13 +17,45 @@ export function DoctorDashboard({ doctorId }: { doctorId: string | null }) {
     to: tomorrow,
     limit: 50,
   });
+  const upcoming = useAppointments({
+    doctorId: doctorId ?? undefined,
+    from: tomorrow,
+    to: addDays(today, 30),
+    limit: 200,
+  });
+  const caseload = useAppointments({
+    doctorId: doctorId ?? undefined,
+    from: addDays(today, -180),
+    to: addDays(today, 30),
+    limit: 500,
+  });
   const notifications = useNotifications();
+
+  const assignedPatients = useMemo(() => {
+    const map = new Map<string, { name: string; code: string; last: string; visits: number }>();
+    (caseload.data ?? []).forEach((row) => {
+      const existing = map.get(row.patient_id);
+      map.set(row.patient_id, {
+        name: row.patients?.full_name ?? "Patient",
+        code: row.patients?.patient_code ?? "",
+        last:
+          !existing || new Date(row.scheduled_at) > new Date(existing.last)
+            ? row.scheduled_at
+            : existing.last,
+        visits: (existing?.visits ?? 0) + 1,
+      });
+    });
+    return [...map.entries()].sort(
+      (a, b) => new Date(b[1].last).getTime() - new Date(a[1].last).getTime(),
+    );
+  }, [caseload.data]);
 
   if (appointments.isLoading) return <Skeleton className="h-72 w-full" />;
 
   const rows = appointments.data ?? [];
+  const upcomingRows = upcoming.data ?? [];
   const arrivals = rows.filter((row) => row.status === "checked_in" || row.status === "confirmed");
-  const alerts = (notifications.data ?? []).filter((item) => item.kind !== "info").slice(0, 3);
+  const alerts = (notifications.data ?? []).filter((item) => item.kind !== "info" && item.kind !== "success").slice(0, 3);
 
   return (
     <div className="space-y-4">
