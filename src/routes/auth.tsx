@@ -2,9 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, MailCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BrandMark } from "@/components/app/app-shell";
-import { roleLabels, type AppRole } from "@/lib/clinic";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -129,16 +127,20 @@ function GoogleButton() {
       disabled={loading}
       onClick={async () => {
         setLoading(true);
-        const result = await lovable.auth.signInWithOAuth("google", {
-          redirect_uri: window.location.origin,
+        // Native Supabase OAuth so Google sign-in keeps working when this app
+        // is exported or self-hosted. The redirect URL is derived from the
+        // current origin, so it works on localhost, preview and production.
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${window.location.origin}/dashboard`,
+            queryParams: { prompt: "select_account" },
+          },
         });
-        if (result.error) {
+        if (error) {
           setLoading(false);
           toast.error("Google sign-in failed. Please try again.");
-          return;
         }
-        if (result.redirected) return;
-        window.location.href = "/dashboard";
       }}
     >
       {loading ? <Loader2 className="size-4 animate-spin" /> : null}
@@ -233,8 +235,6 @@ function LoginForm() {
   );
 }
 
-const ROLE_OPTIONS: AppRole[] = ["patient", "doctor", "nurse", "receptionist", "admin"];
-
 function RegisterForm() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -243,15 +243,35 @@ function RegisterForm() {
     phone: "",
     dateOfBirth: "",
     gender: "Female",
-    role: "patient" as AppRole,
     password: "",
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [confirmEmail, setConfirmEmail] = useState<string | null>(null);
   const score = passwordScore(form.password);
 
   const update = (key: keyof typeof form, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
+
+  if (confirmEmail) {
+    return (
+      <div className="surface-panel mt-4 space-y-4 p-6 text-center">
+        <MailCheck className="mx-auto size-10 text-primary" aria-hidden />
+        <h1 className="text-xl font-bold">Check your email</h1>
+        <p className="text-sm text-muted-foreground">
+          We sent a confirmation link to <span className="font-medium text-foreground">{confirmEmail}</span>.
+          Confirm your address, then sign in to reach your dashboard.
+        </p>
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => navigate({ to: "/auth", search: { mode: "login" } })}
+        >
+          Back to sign in
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <form
@@ -272,7 +292,7 @@ function RegisterForm() {
           return;
         }
         setLoading(true);
-        const { error: signUpError } = await supabase.auth.signUp({
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email: parsed.data.email,
           password: parsed.data.password,
           options: {
@@ -282,7 +302,6 @@ function RegisterForm() {
               phone: parsed.data.phone,
               gender: form.gender,
               date_of_birth: form.dateOfBirth,
-              role: form.role,
             },
           },
         });
@@ -293,6 +312,13 @@ function RegisterForm() {
               ? "An account with this email already exists. Try signing in."
               : signUpError.message,
           );
+          return;
+        }
+        // No session means the project requires email confirmation — navigating
+        // to /dashboard would bounce straight back to /auth.
+        if (!signUpData.session) {
+          setConfirmEmail(parsed.data.email);
+          toast.success("Account created — check your email to confirm it");
           return;
         }
         toast.success("Account created — welcome to CareConnect");
@@ -374,26 +400,6 @@ function RegisterForm() {
             </SelectContent>
           </Select>
         </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="reg-role">Account type</Label>
-        <Select value={form.role} onValueChange={(value) => update("role", value)}>
-          <SelectTrigger id="reg-role">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {ROLE_OPTIONS.map((option) => (
-              <SelectItem key={option} value={option}>
-                {roleLabels[option]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <p className="text-xs text-muted-foreground">
-          Staff account types are open in this demonstration deployment so every role can be
-          reviewed.
-        </p>
       </div>
 
       <div className="space-y-2">

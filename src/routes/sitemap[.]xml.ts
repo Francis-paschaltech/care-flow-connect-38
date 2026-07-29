@@ -1,8 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-// TODO: replace with your project URL once a project name or custom domain is set.
-const BASE_URL = "";
+// Production origin used for absolute <loc> URLs. Override per-host with the
+// SITE_URL environment variable (e.g. https://careconnect.example.com).
+const FALLBACK_BASE_URL = "https://careconnect.lovable.app";
+
+function resolveBaseUrl(request: Request) {
+  const configured = process.env.SITE_URL ?? process.env.VITE_SITE_URL;
+  const base = configured || new URL(request.url).origin || FALLBACK_BASE_URL;
+  return base.replace(/\/+$/, "");
+}
 
 interface SitemapEntry {
   path: string;
@@ -13,7 +20,8 @@ interface SitemapEntry {
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
-      GET: async () => {
+      GET: async ({ request }: { request: Request }) => {
+        const BASE_URL = resolveBaseUrl(request);
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/auth", changefreq: "monthly", priority: "0.6" },

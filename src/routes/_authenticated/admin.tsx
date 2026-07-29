@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireRoles } from "@/lib/route-guards";
 import { AppShell, Panel, EmptyState } from "@/components/app/app-shell";
 import { AdminDashboard } from "@/components/dashboards/admin-dashboard";
+import { CreateStaffPanel } from "@/components/app/create-staff-panel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDepartments, useDoctors } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  beforeLoad: () => requireRoles(["admin"]),
   head: () => ({
     meta: [
       { title: "Administration — CareConnect" },
@@ -26,6 +29,8 @@ function AdminPage() {
     <AppShell title="Administration" subtitle="Staff, departments and system oversight">
       <div className="space-y-4">
         <AdminDashboard />
+
+        <CreateStaffPanel onCreated={() => doctors.refetch()} />
 
         <Panel title="Doctors">
           {doctors.isLoading ? (

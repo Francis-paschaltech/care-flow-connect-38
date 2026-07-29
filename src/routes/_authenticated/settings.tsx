@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AppShell, Panel } from "@/components/app/app-shell";
 import { Button } from "@/components/ui/button";
@@ -26,10 +26,50 @@ export const Route = createFileRoute("/_authenticated/settings")({
 
 function SettingsPage() {
   const { data: me, refetch } = useCurrentUser();
-  const [fullName, setFullName] = useState(me?.fullName ?? "");
+  const [fullName, setFullName] = useState("");
   const [busy, setBusy] = useState(false);
   const [emailReminders, setEmailReminders] = useState(true);
   const [smsReminders, setSmsReminders] = useState(false);
+  const [prefsBusy, setPrefsBusy] = useState(false);
+
+  // The profile loads asynchronously, so sync the field once it arrives.
+  useEffect(() => {
+    if (me?.fullName) setFullName(me.fullName);
+  }, [me?.fullName]);
+
+  useEffect(() => {
+    if (!me?.userId) return;
+    let active = true;
+    supabase
+      .from("profiles")
+      .select("email_reminders, sms_reminders")
+      .eq("id", me.userId)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!active || error || !data) return;
+        setEmailReminders(data.email_reminders ?? true);
+        setSmsReminders(data.sms_reminders ?? false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [me?.userId]);
+
+  const savePreference = async (patch: { email_reminders?: boolean; sms_reminders?: boolean }) => {
+    if (!me?.userId) return;
+    setPrefsBusy(true);
+    const { error } = await supabase.from("profiles").update(patch).eq("id", me.userId);
+    setPrefsBusy(false);
+    if (error) {
+      console.error("Could not save notification preferences", error);
+      toast.error("Could not save your notification preferences.");
+      // Roll the toggle back so the UI matches what is stored.
+      if (patch.email_reminders !== undefined) setEmailReminders(!patch.email_reminders);
+      if (patch.sms_reminders !== undefined) setSmsReminders(!patch.sms_reminders);
+      return;
+    }
+    toast.success("Notification preferences saved");
+  };
 
   const save = async () => {
     if (fullName.trim().length < 2) {
@@ -85,14 +125,29 @@ function SettingsPage() {
           <div className="space-y-3">
             <label className="flex items-center justify-between gap-4 text-sm">
               <span>Email appointment reminders</span>
-              <Switch checked={emailReminders} onCheckedChange={setEmailReminders} />
+              <Switch
+                checked={emailReminders}
+                disabled={prefsBusy || !me}
+                onCheckedChange={(value) => {
+                  setEmailReminders(value);
+                  savePreference({ email_reminders: value });
+                }}
+              />
             </label>
             <label className="flex items-center justify-between gap-4 text-sm">
               <span>SMS appointment reminders</span>
-              <Switch checked={smsReminders} onCheckedChange={setSmsReminders} />
+              <Switch
+                checked={smsReminders}
+                disabled={prefsBusy || !me}
+                onCheckedChange={(value) => {
+                  setSmsReminders(value);
+                  savePreference({ sms_reminders: value });
+                }}
+              />
             </label>
             <p className="text-xs text-muted-foreground">
-              Reminders are sent 24 hours before each appointment.
+              Saved to your profile and applied to appointment reminders sent 24 hours before
+              each appointment.
             </p>
           </div>
         </Panel>

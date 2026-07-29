@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireRoles } from "@/lib/route-guards";
 import { useMemo } from "react";
 import {
   Bar,
@@ -21,6 +22,7 @@ import { CalendarCheck, CheckCircle2, UserX, XCircle } from "lucide-react";
 import { useAppointments, useClinicStats, addDays, startOfDay } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/reports")({
+  beforeLoad: () => requireRoles(["doctor", "receptionist", "admin"]),
   head: () => ({
     meta: [
       { title: "Clinic Reports — CareConnect" },
