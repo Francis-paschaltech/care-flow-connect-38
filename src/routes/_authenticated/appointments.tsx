@@ -309,8 +309,8 @@ function ManageDialog({ appointment, onClose }: { appointment: AppointmentRow | 
       toast.error("Could not cancel this appointment.");
       return;
     }
-    // notifications RLS requires user_id = auth.uid() (or staff). Address the
-    // notification to the acting user, and to the patient when staff cancels.
+    // Notifications are created through a server function; RLS still applies
+    // as the acting user, and any failure is surfaced rather than swallowed.
     if (me?.userId) {
       const recipients = new Set<string>([me.userId]);
       const { data: patientOwner } = await supabase
@@ -320,19 +320,19 @@ function ManageDialog({ appointment, onClose }: { appointment: AppointmentRow | 
         .maybeSingle();
       if (patientOwner?.user_id) recipients.add(patientOwner.user_id);
 
-      const { error: notifyError } = await supabase.from("notifications").insert(
-        [...recipients].map((userId) => ({
-          user_id: userId,
-          title: "Appointment cancelled",
-          message: `${appointment.patients?.full_name}'s appointment with ${appointment.doctors?.full_name} was cancelled.`,
-          kind: "warning",
-        })),
-      );
-      if (notifyError) {
+      try {
+        await notify({
+          data: {
+            recipients: [...recipients],
+            title: "Appointment cancelled",
+            message: `${appointment.patients?.full_name}'s appointment with ${appointment.doctors?.full_name} was cancelled.`,
+            kind: "warning",
+          },
+        });
+        queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      } catch (notifyError) {
         console.error("Failed to create cancellation notification", notifyError);
         toast.warning("Appointment cancelled, but the notification could not be sent.");
-      } else {
-        queryClient.invalidateQueries({ queryKey: ["notifications"] });
       }
     }
     toast.success("Appointment cancelled");
