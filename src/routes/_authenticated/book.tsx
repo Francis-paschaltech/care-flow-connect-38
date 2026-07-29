@@ -19,6 +19,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser, isStaffRole } from "@/hooks/use-auth";
 import { useAppointments, useDepartments, useDoctors } from "@/lib/queries";
 import { cn } from "@/lib/utils";
+import { useServerFn } from "@tanstack/react-start";
+import { createNotifications } from "@/lib/notifications.functions";
 
 export const Route = createFileRoute("/_authenticated/book")({
   head: () => ({
