@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import {
-  CommandDialog,
+  Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useGlobalSearch, SEARCH_SCOPE, type SearchGroup, type SearchResult } from "@/lib/search";
 import type { AppRole } from "@/lib/clinic";
 
@@ -44,13 +45,14 @@ export function GlobalSearchDialog({
   const scopeHint = SEARCH_SCOPE[role].join(", ").toLowerCase();
 
   return (
-    <CommandDialog
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Search CareConnect"
-      description={`Search ${scopeHint}`}
-    >
-      <CommandInput
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="overflow-hidden p-0">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Search CareConnect</DialogTitle>
+          <DialogDescription>{`Search ${scopeHint}`}</DialogDescription>
+        </DialogHeader>
+        <Command shouldFilter={false}>
+          <CommandInput
         placeholder={`Search ${scopeHint}…`}
         value={term}
         onValueChange={setTerm}
@@ -83,6 +85,8 @@ export function GlobalSearchDialog({
           </CommandGroup>
         ))}
       </CommandList>
-    </CommandDialog>
+        </Command>
+      </DialogContent>
+    </Dialog>
   );
 }
