@@ -120,7 +120,7 @@ export function DoctorDashboard({ doctorId }: { doctorId: string | null }) {
               <li
                 key={alert.id}
                 className={`rounded border px-3 py-2 text-xs ${
-                  alert.kind === "alert"
+                  alert.kind === "error"
                     ? "border-destructive/25 bg-danger-soft text-destructive"
                     : "border-warning/35 bg-warning-soft text-warning-foreground"
                 }`}
@@ -131,6 +131,58 @@ export function DoctorDashboard({ doctorId }: { doctorId: string | null }) {
           </ul>
         )}
       </Panel>
+
+      <Panel
+        title="Upcoming appointments"
+        badge={<CountBadge>{upcomingRows.length} next 30 days</CountBadge>}
+      >
+        {upcomingRows.length === 0 ? (
+          <EmptyState message="Nothing scheduled beyond today." />
+        ) : (
+          <ul className="divide-y divide-border">
+            {upcomingRows.slice(0, 6).map((appointment) => (
+              <li key={appointment.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-2.5">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold">{appointment.patients?.full_name}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {formatDate(appointment.scheduled_at)} · {formatTime(appointment.scheduled_at)} ·{" "}
+                    {appointment.reason ?? "Consultation"}
+                  </p>
+                </div>
+                <StatusPill status={appointment.status} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </Panel>
+
+      <Panel
+        title="Assigned patients"
+        badge={<CountBadge>{assignedPatients.length} patients</CountBadge>}
+      >
+        {assignedPatients.length === 0 ? (
+          <EmptyState message="No patients have been assigned to you yet." />
+        ) : (
+          <ul className="divide-y divide-border">
+            {assignedPatients.slice(0, 8).map(([id, patient]) => (
+              <li key={id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-2.5">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold">{patient.name}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {patient.code} · {patient.visits} appointment{patient.visits === 1 ? "" : "s"} · last{" "}
+                    {formatDate(patient.last)}
+                  </p>
+                </div>
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/patients">Open</Link>
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Panel>
+
+      <DoctorSchedulePanel doctorId={doctorId} />
 
       <Panel title="Quick actions">
         <div className="flex flex-wrap gap-2">
