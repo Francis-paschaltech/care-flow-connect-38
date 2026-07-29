@@ -133,7 +133,9 @@ function GoogleButton() {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: "google",
           options: {
-            redirectTo: `${window.location.origin}/dashboard`,
+            // Public same-origin callback — never a protected route, so the
+            // session has time to hydrate before we enter the app.
+            redirectTo: `${window.location.origin}/auth/callback`,
             queryParams: { prompt: "select_account" },
           },
         });
@@ -296,7 +298,7 @@ function RegisterForm() {
           email: parsed.data.email,
           password: parsed.data.password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
             data: {
               full_name: parsed.data.fullName,
               phone: parsed.data.phone,

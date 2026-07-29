@@ -85,26 +85,41 @@ export type Database = {
         Row: {
           action: string
           actor: string
+          actor_id: string | null
           created_at: string
           detail: string | null
           entity: string
           id: string
+          new_role: Database["public"]["Enums"]["app_role"] | null
+          previous_role: Database["public"]["Enums"]["app_role"] | null
+          success: boolean
+          target_user_id: string | null
         }
         Insert: {
           action: string
           actor: string
+          actor_id?: string | null
           created_at?: string
           detail?: string | null
           entity: string
           id?: string
+          new_role?: Database["public"]["Enums"]["app_role"] | null
+          previous_role?: Database["public"]["Enums"]["app_role"] | null
+          success?: boolean
+          target_user_id?: string | null
         }
         Update: {
           action?: string
           actor?: string
+          actor_id?: string | null
           created_at?: string
           detail?: string | null
           entity?: string
           id?: string
+          new_role?: Database["public"]["Enums"]["app_role"] | null
+          previous_role?: Database["public"]["Enums"]["app_role"] | null
+          success?: boolean
+          target_user_id?: string | null
         }
         Relationships: []
       }

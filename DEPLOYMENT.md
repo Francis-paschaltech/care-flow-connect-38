@@ -73,3 +73,63 @@ redirect back to the app will be rejected.
 - `/admin`, `/reports` and `/patients` enforce role checks in `beforeLoad`
   (`src/lib/route-guards.ts`) in addition to the sidebar filtering and the
   database RLS policies.
+
+## Google sign-in redirect (updated)
+
+Google OAuth now returns to the **public** callback route
+`https://<your-domain>/auth/callback`, which waits for the session to hydrate
+before entering the app. Add these to **Authentication → URL Configuration →
+Redirect URLs**:
+
+- `https://your-production-domain.com/**`
+- `http://localhost:8080/**`
+
+## First administrator bootstrap (one-time, manual)
+
+Public sign-up always creates a `patient`; there is no way to self-assign a
+staff role. To create the very first admin:
+
+1. Register normally through `/auth` (Register tab) and confirm the email.
+2. Run once against the project database:
+
+   ```sql
+   delete from public.user_roles where user_id = '<the-user-uuid>';
+   insert into public.user_roles (user_id, role) values ('<the-user-uuid>', 'admin');
+   delete from public.patients where user_id = '<the-user-uuid>';
+   ```
+
+3. Sign in again and open `/admin`. From there all further staff accounts are
+   created through the UI — no SQL required.
+
+Remove any test/demo accounts before go-live (delete the auth user; profile,
+role, patient and appointment rows cascade or can be deleted alongside).
+
+## Admin capabilities (`/admin`)
+
+Backed by admin-only server functions that re-verify the caller's `admin` role
+in the database on every call:
+
+| Action | Server function |
+| --- | --- |
+| Create doctor / nurse / receptionist / admin (atomic, rolls back on failure) | `createStaffAccount` |
+| List all accounts with role + status | `listStaffAccounts` |
+| Promote / demote a user | `setUserRole` |
+| Deactivate / reactivate an account | `setAccountActive` |
+| Send a password-reset email | `sendPasswordReset` |
+
+Every one of these writes an `audit_logs` row containing the actor, action,
+entity, affected user, previous role, new role, success flag and timestamp.
+
+## Security model summary
+
+- **Roles** live only in `public.user_roles`; it has **no** insert/update/delete
+  policies, so the browser can never write a role. Role changes happen only
+  through service-role server functions after an admin check.
+- **Email verification** is enforced: the protected layout signs out and
+  redirects any account without a confirmed email. Admin-created staff accounts
+  are pre-confirmed.
+- **Notifications** are created by the `createNotifications` server function
+  using the caller's own session, so RLS applies and failures surface to the UI.
+- **Route guards** (`requireRoles`) protect `/admin`, `/reports` and `/patients`
+  in addition to RLS.
+- `SUPABASE_SERVICE_ROLE_KEY` is only read inside server-function handlers.

@@ -3,6 +3,7 @@ import { requireRoles } from "@/lib/route-guards";
 import { AppShell, Panel, EmptyState } from "@/components/app/app-shell";
 import { AdminDashboard } from "@/components/dashboards/admin-dashboard";
 import { CreateStaffPanel } from "@/components/app/create-staff-panel";
+import { ManageStaffPanel } from "@/components/app/manage-staff-panel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDepartments, useDoctors } from "@/lib/queries";
 
@@ -31,6 +32,8 @@ function AdminPage() {
         <AdminDashboard />
 
         <CreateStaffPanel onCreated={() => doctors.refetch()} />
+
+        <ManageStaffPanel />
 
         <Panel title="Doctors">
           {doctors.isLoading ? (
