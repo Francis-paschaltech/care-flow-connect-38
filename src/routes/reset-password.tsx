@@ -1,14 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { BrandMark } from "@/components/app/app-shell";
 
 export const Route = createFileRoute("/reset-password")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Choose a new password — CareConnect" },
@@ -41,6 +43,25 @@ function ResetPassword() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  // A valid reset link puts Supabase into a recovery session. Without one the
+  // update call would always fail, so block the form instead.
+  const [sessionState, setSessionState] = useState<"checking" | "ready" | "invalid">("checking");
+
+  useEffect(() => {
+    let active = true;
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!active) return;
+      if (event === "PASSWORD_RECOVERY" || session) setSessionState("ready");
+    });
+    supabase.auth.getSession().then(({ data }) => {
+      if (!active) return;
+      setSessionState((prev) => (data.session ? "ready" : prev === "ready" ? prev : "invalid"));
+    });
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <main className="grid min-h-screen place-items-center bg-background px-4 py-10">
@@ -54,6 +75,10 @@ function ResetPassword() {
           onSubmit={async (event) => {
             event.preventDefault();
             setError(null);
+            if (sessionState !== "ready") {
+              setError("This reset link is invalid or has expired. Request a new one.");
+              return;
+            }
             const parsed = passwordSchema.safeParse(password);
             if (!parsed.success) {
               setError(parsed.error.issues[0].message);
@@ -75,24 +100,33 @@ function ResetPassword() {
           }}
         >
           <h1 className="text-xl font-bold">Choose a new password</h1>
+          {sessionState === "invalid" ? (
+            <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-destructive">
+              This reset link is invalid or has expired.{" "}
+              <Link to="/forgot-password" className="underline">
+                Request a new one
+              </Link>
+              .
+            </p>
+          ) : null}
           <div className="space-y-2">
             <Label htmlFor="rp-password">New password</Label>
-            <Input
+            <PasswordInput
               id="rp-password"
-              type="password"
               autoComplete="new-password"
               required
+              disabled={sessionState !== "ready"}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="rp-confirm">Confirm password</Label>
-            <Input
+            <PasswordInput
               id="rp-confirm"
-              type="password"
               autoComplete="new-password"
               required
+              disabled={sessionState !== "ready"}
               value={confirm}
               onChange={(event) => setConfirm(event.target.value)}
             />
@@ -102,7 +136,7 @@ function ResetPassword() {
               {error}
             </p>
           ) : null}
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full" disabled={loading || sessionState !== "ready"}>
             Update password
           </Button>
         </form>
