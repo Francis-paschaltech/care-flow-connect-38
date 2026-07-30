@@ -145,9 +145,8 @@ export function CreateStaffPanel({ onCreated }: { onCreated?: () => void }) {
 
         <div className="space-y-1.5 sm:col-span-2">
           <Label htmlFor="staff-password">Temporary password</Label>
-          <Input
+          <PasswordInput
             id="staff-password"
-            type="password"
             required
             autoComplete="new-password"
             value={form.password}
