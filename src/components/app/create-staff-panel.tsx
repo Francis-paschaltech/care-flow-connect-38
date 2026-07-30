@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Panel } from "@/components/app/app-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -145,9 +146,8 @@ export function CreateStaffPanel({ onCreated }: { onCreated?: () => void }) {
 
         <div className="space-y-1.5 sm:col-span-2">
           <Label htmlFor="staff-password">Temporary password</Label>
-          <Input
+          <PasswordInput
             id="staff-password"
-            type="password"
             required
             autoComplete="new-password"
             value={form.password}

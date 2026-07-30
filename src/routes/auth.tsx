@@ -6,6 +6,7 @@ import { Loader2, MailCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -177,7 +178,12 @@ function LoginForm() {
         });
         setLoading(false);
         if (signInError) {
-          setError("Invalid email or password. Please try again.");
+          const message = signInError.message.toLowerCase();
+          setError(
+            signInError.code === "email_not_confirmed" || message.includes("not confirmed")
+              ? "Please confirm your email before signing in. Check your inbox for the confirmation link."
+              : "Invalid email or password. Please try again.",
+          );
           return;
         }
         toast.success("Welcome back to CareConnect");
@@ -204,9 +210,8 @@ function LoginForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="login-password">Password</Label>
-        <Input
+        <PasswordInput
           id="login-password"
-          type="password"
           autoComplete="current-password"
           required
           value={password}
@@ -408,9 +413,8 @@ function RegisterForm() {
         <Label htmlFor="reg-password">
           Password <span className="text-destructive">*</span>
         </Label>
-        <Input
+        <PasswordInput
           id="reg-password"
-          type="password"
           autoComplete="new-password"
           required
           value={form.password}
