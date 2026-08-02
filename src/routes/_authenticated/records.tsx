@@ -11,9 +11,9 @@ import { formatDate } from "@/lib/clinic";
 export const Route = createFileRoute("/_authenticated/records")({
   head: () => ({
     meta: [
-      { title: "Medical Records — CareConnect" },
+      { title: "Medical Records — WellCare" },
       { name: "description", content: "Consultation notes, diagnoses, prescriptions and follow-up plans in one digital folder." },
-      { property: "og:title", content: "Medical Records — CareConnect" },
+      { property: "og:title", content: "Medical Records — WellCare" },
       { property: "og:description", content: "Diagnoses, prescriptions and follow-up plans per patient visit." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

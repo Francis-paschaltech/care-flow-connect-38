@@ -12,15 +12,15 @@ export const Route = createFileRoute("/reset-password")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Choose a new password — CareConnect" },
+      { title: "Choose a new password — WellCare" },
       {
         name: "description",
-        content: "Set a new password for your CareConnect clinic account.",
+        content: "Set a new password for your WellCare clinic account.",
       },
-      { property: "og:title", content: "Choose a new password — CareConnect" },
+      { property: "og:title", content: "Choose a new password — WellCare" },
       {
         property: "og:description",
-        content: "Set a new password for your CareConnect clinic account.",
+        content: "Set a new password for your WellCare clinic account.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

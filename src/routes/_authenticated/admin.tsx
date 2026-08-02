@@ -11,9 +11,9 @@ export const Route = createFileRoute("/_authenticated/admin")({
   beforeLoad: () => requireRoles(["admin"]),
   head: () => ({
     meta: [
-      { title: "Administration — CareConnect" },
+      { title: "Administration — WellCare" },
       { name: "description", content: "Clinic administration: staff directory, departments, system activity and audit logs." },
-      { property: "og:title", content: "Administration — CareConnect" },
+      { property: "og:title", content: "Administration — WellCare" },
       { property: "og:description", content: "Manage doctors, departments and review clinic audit logs." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -35,9 +35,9 @@ import { formatDate, formatTime, toDateKey } from "@/lib/clinic";
 export const Route = createFileRoute("/_authenticated/appointments")({
   head: () => ({
     meta: [
-      { title: "Appointments — CareConnect" },
+      { title: "Appointments — WellCare" },
       { name: "description", content: "Browse, reschedule and cancel clinic appointments in list or calendar view." },
-      { property: "og:title", content: "Appointments — CareConnect" },
+      { property: "og:title", content: "Appointments — WellCare" },
       { property: "og:description", content: "Browse, reschedule and cancel clinic appointments." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

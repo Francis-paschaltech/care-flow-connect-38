@@ -8,7 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
-# CareConnect Development Guidelines
+# WellCare Development Guidelines
 
 ## Project Understanding
 - Understand the existing architecture before making changes.
@@ -33,4 +33,4 @@
 - Explain major file changes before implementing them.
 
 ## Project Goal
-CareConnect is a healthcare-focused application. All improvements should prioritize reliability, usability, security, and a smooth user experience.
+WellCare is a healthcare-focused application. All improvements should prioritize reliability, usability, security, and a smooth user experience.

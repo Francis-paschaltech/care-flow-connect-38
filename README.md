@@ -1,6 +1,6 @@
-# CareConnect Clinic
+# WellCare Clinic
 
-Build a production-quality, fully responsive web application called CareConnect Clinic Appointment System.
+Build a production-quality, fully responsive web application called WellCare Clinic Appointment System.
 
 CRITICAL DESIGN INSTRUCTION
 
@@ -34,7 +34,7 @@ Only improve responsiveness, accessibility and usability where necessary.
 
 PROJECT OVERVIEW
 
-CareConnect is a clinic management platform that replaces paper-based appointment books and patient folders.
+WellCare is a clinic management platform that replaces paper-based appointment books and patient folders.
 
 The system should eliminate:
 
@@ -164,7 +164,7 @@ Headline:
 
 Subheadline:
 
-"Book appointments, manage patient records, and streamline clinic operations with CareConnect."
+"Book appointments, manage patient records, and streamline clinic operations with WellCare."
 
 CTA Buttons:
 
@@ -552,11 +552,11 @@ FINAL REQUIREMENT
 
 This must feel like a real healthcare SaaS platform, not a student project.
 
-The application should be presentation-ready, visually impressive, fully interactive, and suitable for demonstrating the complete CareConnect Clinic Appointment System workflow from patient registration through appointment management, medical record access, reporting, and administration.
+The application should be presentation-ready, visually impressive, fully interactive, and suitable for demonstrating the complete WellCare Clinic Appointment System workflow from patient registration through appointment management, medical record access, reporting, and administration.
 
 This project was built with [Lovable](https://lovable.dev).
 
-**Live app**: https://careconnect22.lovable.app
+**Live app**: https://wellcare22.lovable.app
 
 ## Build with Lovable
 
@@ -579,7 +579,7 @@ npm run dev
 
 ## Security & production notes
 
-CareConnect enforces roles server-side: public sign-up always creates a
+WellCare enforces roles server-side: public sign-up always creates a
 `patient`, and doctor/nurse/receptionist/admin accounts are provisioned only by
 a signed-in admin from `/admin`. See [DEPLOYMENT.md](./DEPLOYMENT.md) for the
 first-admin bootstrap, Google OAuth setup, environment variables and the full

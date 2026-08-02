@@ -32,7 +32,7 @@ export async function requireRoles(allowed: AppRole[]) {
 
   const roles = (data ?? []).map((row) => row.role as AppRole);
   if (!roles.some((role) => allowed.includes(role))) {
-    toast.error("You don't have access to that area of CareConnect.");
+    toast.error("You don't have access to that area of WellCare.");
     throw redirect({ to: "/dashboard" });
   }
 

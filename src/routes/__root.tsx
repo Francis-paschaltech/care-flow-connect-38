@@ -78,23 +78,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CareConnect — Modern Healthcare Scheduling Made Simple" },
+      { title: "WellCare — Modern Healthcare Scheduling Made Simple" },
       {
         name: "description",
         content:
-          "Book clinic appointments online, manage patient records and streamline clinic operations with CareConnect.",
+          "Book clinic appointments online, manage patient records and streamline clinic operations with WellCare.",
       },
-      { name: "author", content: "CareConnect" },
-      { property: "og:title", content: "CareConnect — Modern Healthcare Scheduling Made Simple" },
+      { name: "author", content: "WellCare" },
+      { property: "og:title", content: "WellCare — Modern Healthcare Scheduling Made Simple" },
       {
         property: "og:description",
         content:
-          "Book clinic appointments online, manage patient records and streamline clinic operations with CareConnect.",
+          "Book clinic appointments online, manage patient records and streamline clinic operations with WellCare.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CareConnect — Modern Healthcare Scheduling Made Simple" },
-      { name: "twitter:description", content: "Book clinic appointments online, manage patient records and streamline clinic operations with CareConnect." },
+      { name: "twitter:title", content: "WellCare — Modern Healthcare Scheduling Made Simple" },
+      { name: "twitter:description", content: "Book clinic appointments online, manage patient records and streamline clinic operations with WellCare." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/19a1de8a-b104-4aaf-9cb9-4b6bdbb9ae22" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/19a1de8a-b104-4aaf-9cb9-4b6bdbb9ae22" },
     ],

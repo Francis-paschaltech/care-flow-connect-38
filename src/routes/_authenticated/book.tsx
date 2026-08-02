@@ -26,9 +26,9 @@ import { slotsForHours, weekDayOf, type WeekDay } from "@/lib/clinic";
 export const Route = createFileRoute("/_authenticated/book")({
   head: () => ({
     meta: [
-      { title: "Book an Appointment — CareConnect" },
+      { title: "Book an Appointment — WellCare" },
       { name: "description", content: "Book a clinic appointment in three steps: your details, doctor and department, then date and time." },
-      { property: "og:title", content: "Book an Appointment — CareConnect" },
+      { property: "og:title", content: "Book an Appointment — WellCare" },
       { property: "og:description", content: "Pick a department, doctor and available time slot in a few clicks." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

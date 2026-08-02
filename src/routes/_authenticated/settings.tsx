@@ -13,9 +13,9 @@ import { roleLabels } from "@/lib/clinic";
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — CareConnect" },
-      { name: "description", content: "Update your CareConnect profile details and notification preferences." },
-      { property: "og:title", content: "Settings — CareConnect" },
+      { title: "Settings — WellCare" },
+      { name: "description", content: "Update your WellCare profile details and notification preferences." },
+      { property: "og:title", content: "Settings — WellCare" },
       { property: "og:description", content: "Manage your profile and notification preferences." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

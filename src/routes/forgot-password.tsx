@@ -11,15 +11,15 @@ import { BrandMark } from "@/components/app/app-shell";
 export const Route = createFileRoute("/forgot-password")({
   head: () => ({
     meta: [
-      { title: "Reset your password — CareConnect" },
+      { title: "Reset your password — WellCare" },
       {
         name: "description",
-        content: "Request a secure password reset link for your CareConnect clinic account.",
+        content: "Request a secure password reset link for your WellCare clinic account.",
       },
-      { property: "og:title", content: "Reset your password — CareConnect" },
+      { property: "og:title", content: "Reset your password — WellCare" },
       {
         property: "og:description",
-        content: "Request a secure password reset link for your CareConnect account.",
+        content: "Request a secure password reset link for your WellCare account.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

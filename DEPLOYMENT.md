@@ -1,4 +1,4 @@
-# CareConnect — Deployment Guide
+# WellCare — Deployment Guide
 
 ## Build & hosting target
 
