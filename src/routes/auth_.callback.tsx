@@ -9,15 +9,15 @@ export const Route = createFileRoute("/auth_/callback")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Completing sign-in — CareConnect" },
+      { title: "Completing sign-in — WellCare" },
       {
         name: "description",
-        content: "Finishing your CareConnect sign-in and returning you to your dashboard.",
+        content: "Finishing your WellCare sign-in and returning you to your dashboard.",
       },
-      { property: "og:title", content: "Completing sign-in — CareConnect" },
+      { property: "og:title", content: "Completing sign-in — WellCare" },
       {
         property: "og:description",
-        content: "Finishing your CareConnect sign-in securely.",
+        content: "Finishing your WellCare sign-in securely.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

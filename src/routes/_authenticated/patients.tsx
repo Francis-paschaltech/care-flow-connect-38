@@ -24,9 +24,9 @@ export const Route = createFileRoute("/_authenticated/patients")({
   beforeLoad: () => requireRoles(STAFF_ROLES),
   head: () => ({
     meta: [
-      { title: "Patients — CareConnect" },
+      { title: "Patients — WellCare" },
       { name: "description", content: "Search the clinic patient directory, register new patients and open digital folders." },
-      { property: "og:title", content: "Patients — CareConnect" },
+      { property: "og:title", content: "Patients — WellCare" },
       { property: "og:description", content: "Search, register and review clinic patient records." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

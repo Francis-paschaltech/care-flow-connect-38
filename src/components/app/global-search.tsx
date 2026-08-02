@@ -48,7 +48,7 @@ export function GlobalSearchDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="overflow-hidden p-0">
         <DialogHeader className="sr-only">
-          <DialogTitle>Search CareConnect</DialogTitle>
+          <DialogTitle>Search WellCare</DialogTitle>
           <DialogDescription>{`Search ${scopeHint}`}</DialogDescription>
         </DialogHeader>
         <Command shouldFilter={false}>

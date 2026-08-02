@@ -24,16 +24,16 @@ export const Route = createFileRoute("/auth")({
   }),
   head: () => ({
     meta: [
-      { title: "Sign in or register — CareConnect" },
+      { title: "Sign in or register — WellCare" },
       {
         name: "description",
         content:
-          "Sign in to CareConnect or register as a patient to book clinic appointments and view your medical history.",
+          "Sign in to WellCare or register as a patient to book clinic appointments and view your medical history.",
       },
-      { property: "og:title", content: "Sign in or register — CareConnect" },
+      { property: "og:title", content: "Sign in or register — WellCare" },
       {
         property: "og:description",
-        content: "Access your CareConnect clinic account to manage appointments and records.",
+        content: "Access your WellCare clinic account to manage appointments and records.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -79,7 +79,7 @@ function AuthPage() {
             One connected record for every appointment, visit and prescription.
           </h2>
           <p className="mt-4 max-w-md text-sm text-sidebar-foreground/75">
-            CareConnect keeps patients, clinicians and front-desk staff working from the same
+            WellCare keeps patients, clinicians and front-desk staff working from the same
             schedule — with role-based access protecting every patient file.
           </p>
         </div>
@@ -186,7 +186,7 @@ function LoginForm() {
           );
           return;
         }
-        toast.success("Welcome back to CareConnect");
+        toast.success("Welcome back to WellCare");
         navigate({ to: "/dashboard" });
       }}
     >
@@ -328,7 +328,7 @@ function RegisterForm() {
           toast.success("Account created — check your email to confirm it");
           return;
         }
-        toast.success("Account created — welcome to CareConnect");
+        toast.success("Account created — welcome to WellCare");
         navigate({ to: "/dashboard" });
       }}
     >

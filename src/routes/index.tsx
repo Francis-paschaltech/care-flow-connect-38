@@ -21,17 +21,17 @@ import { BrandMark } from "@/components/app/app-shell";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CareConnect — Modern Healthcare Scheduling Made Simple" },
+      { title: "WellCare — Modern Healthcare Scheduling Made Simple" },
       {
         name: "description",
         content:
-          "Book clinic appointments online, manage patient records and streamline clinic operations with CareConnect.",
+          "Book clinic appointments online, manage patient records and streamline clinic operations with WellCare.",
       },
-      { property: "og:title", content: "CareConnect — Modern Healthcare Scheduling Made Simple" },
+      { property: "og:title", content: "WellCare — Modern Healthcare Scheduling Made Simple" },
       {
         property: "og:description",
         content:
-          "Book clinic appointments online, manage patient records and streamline clinic operations with CareConnect.",
+          "Book clinic appointments online, manage patient records and streamline clinic operations with WellCare.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -133,7 +133,7 @@ function Landing() {
             </h1>
             <p className="mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
               Book appointments, manage patient records, and streamline clinic operations with
-              CareConnect.
+              WellCare.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -173,7 +173,7 @@ function Landing() {
       <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6" id="features">
         <h2 className="text-2xl font-bold sm:text-3xl">Everything a busy clinic runs on</h2>
         <p className="mt-2 max-w-2xl text-muted-foreground">
-          CareConnect replaces the paper appointment book and patient folders with one connected
+          WellCare replaces the paper appointment book and patient folders with one connected
           system.
         </p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -245,9 +245,9 @@ function Landing() {
                   <span className="block font-semibold">Email</span>
                   <a
                     className="text-muted-foreground hover:text-primary"
-                    href="mailto:hello@careconnect-clinic.app"
+                    href="mailto:hello@wellcare-clinic.app"
                   >
-                    hello@careconnect-clinic.app
+                    hello@wellcare-clinic.app
                   </a>
                 </span>
               </li>
@@ -275,7 +275,7 @@ function Landing() {
         <div className="mx-auto grid max-w-6xl gap-3 px-4 sm:px-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
           <BrandMark />
           <p className="text-xs text-sidebar-foreground/70">
-            © {new Date().getFullYear()} CareConnect Clinic. Patient data handled with role-based
+            © {new Date().getFullYear()} WellCare Clinic. Patient data handled with role-based
             access control.
           </p>
         </div>

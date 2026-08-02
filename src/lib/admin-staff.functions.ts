@@ -152,7 +152,7 @@ export const createStaffAccount = createServerFn({ method: "POST" })
 
     await supabaseAdmin.from("notifications").insert({
       user_id: userId,
-      title: "Welcome to CareConnect",
+      title: "Welcome to WellCare",
       message: "An administrator created your staff account.",
       kind: "success",
     });

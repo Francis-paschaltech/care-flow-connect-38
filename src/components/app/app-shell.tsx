@@ -65,7 +65,7 @@ function SidebarNav({ role, onNavigate }: { role: AppRole; onNavigate?: () => vo
 export function BrandMark({ className }: { className?: string }) {
   return (
     <span className={cn("font-display text-xl font-extrabold tracking-tight", className)}>
-      Care<span className="text-brand-teal">Connect</span>
+      Well<span className="text-brand-teal">Care</span>
     </span>
   );
 }
@@ -134,7 +134,7 @@ export function AppShell({
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
-                aria-label="Search CareConnect"
+                aria-label="Search WellCare"
                 className="hidden items-center gap-2 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground md:flex"
               >
                 <Search className="size-3.5" aria-hidden />
@@ -143,7 +143,7 @@ export function AppShell({
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label="Search CareConnect"
+                aria-label="Search WellCare"
                 className="md:hidden"
                 onClick={() => setSearchOpen(true)}
               >

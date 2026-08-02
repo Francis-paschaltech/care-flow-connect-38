@@ -25,9 +25,9 @@ export const Route = createFileRoute("/_authenticated/reports")({
   beforeLoad: () => requireRoles(["doctor", "receptionist", "admin"]),
   head: () => ({
     meta: [
-      { title: "Clinic Reports — CareConnect" },
+      { title: "Clinic Reports — WellCare" },
       { name: "description", content: "Attendance statistics, no-show trends and doctor utilisation charts for the clinic." },
-      { property: "og:title", content: "Clinic Reports — CareConnect" },
+      { property: "og:title", content: "Clinic Reports — WellCare" },
       { property: "og:description", content: "Attendance rates, no-show trends and doctor utilisation at a glance." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

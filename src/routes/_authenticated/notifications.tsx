@@ -7,9 +7,9 @@ import { formatDate, formatTime } from "@/lib/clinic";
 export const Route = createFileRoute("/_authenticated/notifications")({
   head: () => ({
     meta: [
-      { title: "Notifications — CareConnect" },
+      { title: "Notifications — WellCare" },
       { name: "description", content: "Appointment reminders, cancellations and clinic alerts in one feed." },
-      { property: "og:title", content: "Notifications — CareConnect" },
+      { property: "og:title", content: "Notifications — WellCare" },
       { property: "og:description", content: "Reminders, cancellations and urgent clinic alerts." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

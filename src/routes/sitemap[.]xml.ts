@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
 // Production origin used for absolute <loc> URLs. Override per-host with the
-// SITE_URL environment variable (e.g. https://careconnect.example.com).
-const FALLBACK_BASE_URL = "https://careconnect.lovable.app";
+// SITE_URL environment variable (e.g. https://wellcare.example.com).
+const FALLBACK_BASE_URL = "https://wellcare.lovable.app";
 
 function resolveBaseUrl(request: Request) {
   const configured = process.env.SITE_URL ?? process.env.VITE_SITE_URL;

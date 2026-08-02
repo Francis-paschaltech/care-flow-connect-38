@@ -10,9 +10,9 @@ import { formatLongDate, greeting, roleLabels } from "@/lib/clinic";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — CareConnect" },
-      { name: "description", content: "Your CareConnect clinic dashboard: appointments, arrivals, alerts and daily summary." },
-      { property: "og:title", content: "Dashboard — CareConnect" },
+      { title: "Dashboard — WellCare" },
+      { name: "description", content: "Your WellCare clinic dashboard: appointments, arrivals, alerts and daily summary." },
+      { property: "og:title", content: "Dashboard — WellCare" },
       { property: "og:description", content: "Appointments, arrivals, alerts and clinic activity at a glance." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
