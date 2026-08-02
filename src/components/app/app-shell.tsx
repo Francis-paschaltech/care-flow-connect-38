@@ -65,7 +65,7 @@ function SidebarNav({ role, onNavigate }: { role: AppRole; onNavigate?: () => vo
 export function BrandMark({ className }: { className?: string }) {
   return (
     <span className={cn("font-display text-xl font-extrabold tracking-tight", className)}>
-      Care<span className="text-brand-teal">Connect</span>
+      Well<span className="text-brand-teal">Care</span>
     </span>
   );
 }
