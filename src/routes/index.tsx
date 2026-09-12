@@ -111,7 +111,7 @@ function Landing() {
           </Link>
           <div className="flex shrink-0 items-center gap-2">
             <Button asChild variant="ghost" size="sm">
-              <Link to="/auth">Login</Link>
+              <Link to="/auth" search={{ mode: "login" }}>Login</Link>
             </Button>
             <Button asChild size="sm">
               <Link to="/auth" search={{ mode: "register" }}>
@@ -142,7 +142,7 @@ function Landing() {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link to="/auth">Login</Link>
+                <Link to="/auth" search={{ mode: "login" }}>Login</Link>
               </Button>
             </div>
             <dl className="mt-10 grid grid-cols-3 gap-4 border-t border-border pt-6 text-sm">
