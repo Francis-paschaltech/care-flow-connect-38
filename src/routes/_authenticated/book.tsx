@@ -79,22 +79,29 @@ function BookPage() {
     () => ((selectedDoctor?.available_days ?? []) as string[]) as WeekDay[],
     [selectedDoctor],
   );
+  // The date input can be cleared or partially typed, which yields an invalid
+  // Date; keep every downstream consumer on a valid day or nothing at all.
+  const dayStart = useMemo(() => {
+    if (!date) return null;
+    const parsed = new Date(`${date}T00:00`);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }, [date]);
+
   const dayIsWorked = useMemo(() => {
-    if (!date || workingDays.length === 0) return false;
-    return workingDays.includes(weekDayOf(new Date(`${date}T00:00`)));
-  }, [date, workingDays]);
+    if (!dayStart || workingDays.length === 0) return false;
+    return workingDays.includes(weekDayOf(dayStart));
+  }, [dayStart, workingDays]);
   const slots = useMemo(
     () => (selectedDoctor ? slotsForHours(selectedDoctor.start_hour, selectedDoctor.end_hour) : []),
     [selectedDoctor],
   );
 
-  const dayStart = new Date(`${date}T00:00`);
-  const dayEnd = new Date(dayStart.getTime() + 86400000);
+  const dayEnd = dayStart ? new Date(dayStart.getTime() + 86400000) : undefined;
   const dayAppointments = useAppointments({
-    from: dayStart,
+    from: dayStart ?? undefined,
     to: dayEnd,
     doctorId: doctorId || undefined,
-    enabled: !!doctorId,
+    enabled: !!doctorId && !!dayStart,
     limit: 100,
   });
 
