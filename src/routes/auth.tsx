@@ -314,10 +314,15 @@ function RegisterForm() {
         });
         setLoading(false);
         if (signUpError) {
+          const raw =
+            typeof signUpError.message === "string" && signUpError.message.trim()
+              ? signUpError.message
+              : "";
           setError(
-            signUpError.message.includes("already")
+            raw.includes("already")
               ? "An account with this email already exists. Try signing in."
-              : signUpError.message,
+              : raw ||
+                  "We couldn't create your account right now. Please try again in a moment.",
           );
           return;
         }
